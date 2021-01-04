@@ -1,0 +1,167 @@
+Program received signal SIGSEGV, Segmentation fault.
+[----------------------------------registers-----------------------------------]
+RAX: 0x1
+RBX: 0x0
+RCX: 0x5555579d87a0 --> 0x555555961200 --> 0x7fffe98f63b0 --> 0x7fffe967e90e (<c10::TensorImpl::~TensorImpl()>: push   rbp)
+RDX: 0x8
+RSI: 0x5555579d87a8 --> 0x0
+RDI: 0x8
+RBP: 0x7fffffffc6c0 --> 0x7fffffffc770 --> 0x7fffffffc790 --> 0x7fffffffc7b0 --> 0x7fffffffc7d0 --> 0x7fffffffc7f0 (--> ...)
+RSP: 0x7fffffffc6c0 --> 0x7fffffffc770 --> 0x7fffffffc790 --> 0x7fffffffc7b0 --> 0x7fffffffc7d0 --> 0x7fffffffc7f0 (--> ...)
+RIP: 0x7fffea5ba05d (<std::__atomic_base<unsigned long>::operator++()+17>:     )
+R8 : 0x7fffffffc980 --> 0x7fffe99031c0 --> 0x7fffe98f6540 --> 0x7fffe9682ff4 (<c10::UndefinedTensorImpl::~UndefinedTensorImpl()>:       )
+R9 : 0x7fffffffc988 --> 0x7fffe99031c0 --> 0x7fffe98f6540 --> 0x7fffe9682ff4 (<c10::UndefinedTensorImpl::~UndefinedTensorImpl()>:       )
+R10: 0x7fffffffddc0 --> 0x5555579cd5d0 --> 0x7fffe98f63b0 --> 0x7fffe967e90e (<c10::TensorImpl::~TensorImpl()>: push   rbp)
+R11: 0x5555557e9580 --> 0x0
+R12: 0x7fffffffc998 --> 0x7fffe92e0c08 --> 0x7fffdb29a80e (     <at::native::(anonymous namespace)::LSTMCell<at::native::(anonymous namespace)::QuantizedCellParams>::~LSTMCell()>:     push   rbp)
+R13: 0x7fffffffce60 --> 0x7fff00000001
+R14: 0x7fffffffce20 --> 0x555500000001
+R15: 0x7fffffffce40 --> 0x7fff00000001
+EFLAGS: 0x10202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x7fffea5ba050 <std::__atomic_base<unsigned long>::operator++()+4>:
+    mov    QWORD PTR [rbp-0x8],rdi
+   0x7fffea5ba054 <std::__atomic_base<unsigned long>::operator++()+8>:
+    mov    rdx,QWORD PTR [rbp-0x8]
+   0x7fffea5ba058 <std::__atomic_base<unsigned long>::operator++()+12>:
+    mov    eax,0x1
+=> 0x7fffea5ba05d <std::__atomic_base<unsigned long>::operator++()+17>:
+    lock xadd QWORD PTR [rdx],rax
+   0x7fffea5ba062 <std::__atomic_base<unsigned long>::operator++()+22>:
+    add    rax,0x1
+   0x7fffea5ba066 <std::__atomic_base<unsigned long>::operator++()+26>:
+    pop    rbp
+   0x7fffea5ba067 <std::__atomic_base<unsigned long>::operator++()+27>: ret
+   0x7fffea5ba068 <std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, char const*)>:        push   rbp
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffc6c0 --> 0x7fffffffc770 --> 0x7fffffffc790 --> 0x7fffffffc7b0 --> 0x7fffffffc7d0 --> 0x7fffffffc7f0 (--> ...)
+0008| 0x7fffffffc6c8 --> 0x7fffea5baa75 (<c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::retain_()+87>: mov    QWORD PTR [rbp-0x88],rax)
+0016| 0x7fffffffc6d0 --> 0x7fffffffc700 --> 0x7fffffffc730 --> 0x7fffffffc750 --> 0x7fffffffc770 --> 0x7fffffffc790 (--> ...)
+0024| 0x7fffffffc6d8 --> 0x7fffffffc9a0 --> 0x0
+0032| 0x7fffffffc6e0 --> 0x7fffffffc700 --> 0x7fffffffc730 --> 0x7fffffffc750 --> 0x7fffffffc770 --> 0x7fffffffc790 (--> ...)
+0040| 0x7fffffffc6e8 --> 0x7fffffffc7e0 --> 0x5555579d87a8 --> 0x0
+0048| 0x7fffffffc6f0 --> 0x7fffffffc710 --> 0x7fffffffc730 --> 0x7fffffffc750 --> 0x7fffffffc770 --> 0x7fffffffc790 (--> ...)
+0056| 0x7fffffffc6f8 --> 0x7fffead011c2 (     <std::allocator<std::shared_ptr<torch::jit::Operator> >::~allocator()+24>:        nop)
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x00007fffea5ba05d in std::__atomic_base<unsigned long>::operator++ (this=0x8)
+    at /usr/include/c++/7/bits/atomic_base.h:296
+296           { return __atomic_add_fetch(&_M_i, 1, memory_order_seq_cst); }
+gdb-peda$ bt
+#0  0x00007fffea5ba05d in std::__atomic_base<unsigned long>::operator++ (
+    this=0x8) at /usr/include/c++/7/bits/atomic_base.h:296
+#1  0x00007fffea5baa75 in c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::retain_ (this=0x7fffffffc9a0) at ../c10/util/intrusive_ptr.h:207
+#2  0x00007fffea5ba1b4 in c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::intrusive_ptr (this=0x7fffffffc9a0, rhs=...)
+    at ../c10/util/intrusive_ptr.h:277
+#3  0x00007fffea7435e7 in at::Tensor::Tensor (this=0x7fffffffc9a0)
+    at aten/src/ATen/core/TensorBody.h:97
+#4  0x00007fffeb052849 in std::_Head_base<1ul, at::Tensor, false>::_Head_base (
+    this=0x7fffffffc9a0, __h=...) at /usr/include/c++/7/tuple:126
+#5  0x00007fffeb0527c5 in std::_Tuple_impl<1ul, at::Tensor>::_Tuple_impl (
+    this=0x7fffffffc9a0, __head=...) at /usr/include/c++/7/tuple:361
+#6  0x00007fffeb0525fc in std::_Tuple_impl<0ul, at::Tensor, at::Tensor>::_Tuple_impl (this=0x7fffffffc9a0, __head=..., __tail#0=...)
+    at /usr/include/c++/7/tuple:211
+#7  0x00007fffeb052291 in std::tuple<at::Tensor, at::Tensor>::tuple<void, true>
+    (this=0x7fffffffc9a0, __a1=..., __a2=...) at /usr/include/c++/7/tuple:948
+#8  0x00007fffeb052138 in std::make_tuple<at::Tensor const&, at::Tensor const&>
+    () at /usr/include/c++/7/tuple:1452
+#9  0x00007fffdb27106e in at::native::prepare_quantized_lstm_hx (hx=...)
+    at ../aten/src/ATen/native/RNN.cpp:1810
+#10 0x00007fffdb27137f in at::native::quantized_lstm_cell (input=..., hx=...,
+    w_ih=..., w_hh=..., b_ih=..., b_hh=..., packed_ih=..., packed_hh=...,
+    col_offsets_ih=..., col_offsets_hh=..., scale_ih=..., scale_hh=...,
+    zero_point_ih=..., zero_point_hh=...)
+    at ../aten/src/ATen/native/RNN.cpp:1816
+#11 0x00007fffdbd1ec42 in at::(anonymous namespace)::quantized_lstm_cell (
+    input=..., hx=..., w_ih=..., w_hh=..., b_ih=..., b_hh=..., packed_ih=...,
+    packed_hh=..., col_offsets_ih=..., col_offsets_hh=..., scale_ih=...,
+    scale_hh=..., zero_point_ih=..., zero_point_hh=...)
+    at aten/src/ATen/RegisterMath.cpp:1956
+#12 0x00007fffdbd9bc05 in c10::impl::detail::WrapFunctionIntoFunctor_<c10::CompileTimeFunctionPointer<std::tuple<at::Tensor, at::Tensor>(const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar), at::(anonymous namespace)::quantized_lstm_cell>, std::tuple<at::Tensor, at::Tensor>, c10::guts::typelist::typelist<const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar> >::operator()(const at::Tensor &, c10::ArrayRef<at::Tensor>, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar) (
+    this=0x5555560f0da0, args#0=..., args#1=..., args#2=..., args#3=...,
+    args#4=..., args#5=..., args#6=..., args#7=..., args#8=..., args#9=...,
+    args#10=..., args#11=..., args#12=..., args#13=...)
+    at ../aten/src/ATen/core/boxing/impl/WrapFunctionIntoFunctor.h:13
+#13 0x00007fffdbddff66 in c10::impl::wrap_kernel_functor_unboxed_<c10::impl::detail::WrapFunctionIntoFunctor_<c10::CompileTimeFunctionPointer<std::tuple<at::Tensor, at::Tensor>(const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar), at::(anonymous namespace)::quantized_lstm_cell>, std::tuple<at::Tensor, at::Tensor>, c10::guts::typelist::typelist<const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar> >, std::tuple<at::Tensor, at::Tensor>(const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)>::call(c10::OperatorKernel *, const at::Tensor &, c10::ArrayRef<at::Tensor>, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar) (functor=0x5555560f0da0, args#0=..., args#1=..., args#2=...,
+    args#3=..., args#4=..., args#5=..., args#6=..., args#7=..., args#8=...,
+    args#9=..., args#10=..., args#11=..., args#12=..., args#13=...)
+    at ../aten/src/ATen/core/boxing/impl/make_boxed_from_unboxed_functor.h:414
+#14 0x00007fffdbaa42ce in c10::callUnboxedKernelFunction<std::tuple<at::Tensor, at::Tensor>, at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar> (
+    unboxed_kernel_func=0x7fffdbddfd39 <c10::impl::wrap_kernel_functor_unboxed_<c10::impl::detail::WrapFunctionIntoFunctor_<c10::CompileTimeFunctionPointer<std::tuple<at::Tensor, at::Tensor>(const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar), at::(anonymous namespace)::quantized_lstm_cell>, std::tuple<at::Tensor, at::Tensor>, c10::guts::typelist::typelist<const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar> >, std::tuple<at::Tensor, at::Tensor>(const at::Tensor&, c10::ArrayRef<at::Tensor>, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)>::call(c10::OperatorKernel *, const at::Tensor &, c10::ArrayRef<at::Tensor>, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)>, functor=0x5555560f0da0)
+    at ../aten/src/ATen/core/boxing/KernelFunction_impl.h:43
+#15 0x00007fffdba10f40 in c10::KernelFunction::call<std::tuple<at::Tensor, at::Tensor>, at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar> (this=0x5555560f23c0, opHandle=...)
+    at ../aten/src/ATen/core/boxing/KernelFunction_impl.h:53
+#16 0x00007fffdb975e15 in c10::Dispatcher::callWithDispatchKey<std::tuple<at::Tensor, at::Tensor>, at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar>(c10::TypedOperatorHandle<std::tuple<at::Tensor, at::Tensor> (at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)> const&, c10::DispatchKey, at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar) const (
+    this=0x7fffe94fbfa0 <c10::Dispatcher::singleton()::_singleton>, op=...,
+    dispatchKey=c10::DispatchKey::AutogradCPU)
+    at ../aten/src/ATen/core/dispatch/Dispatcher.h:398
+#17 0x00007fffdb8b5bf4 in c10::Dispatcher::call<std::tuple<at::Tensor, at::Tensor>, at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar>(c10::TypedOperatorHandle<std::tuple<at::Tensor, at::Tensor> (at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)> const&, at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar) const (
+    this=0x7fffe94fbfa0 <c10::Dispatcher::singleton()::_singleton>, op=...)
+    at ../aten/src/ATen/core/dispatch/Dispatcher.h:409
+#18 0x00007fffdb821c11 in c10::TypedOperatorHandle<std::tuple<at::Tensor, at::Tensor> (at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)>::call(at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar) const (
+    this=0x7fffe9505800 <at::quantized_lstm_cell(at::Tensor const&, c10::ArrayRef<at::Tensor>, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, at::Tensor const&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)::op>, args#0=...,
+    args#1=..., args#2=..., args#3=..., args#4=..., args#5=..., args#6=...,
+    args#7=..., args#8=..., args#9=..., args#10=..., args#11=..., args#12=...,
+    args#13=...) at ../aten/src/ATen/core/dispatch/Dispatcher.h:349
+#19 0x00007fffdb7a0a0b in at::quantized_lstm_cell (input=..., hx=...,
+    w_ih=..., w_hh=..., b_ih=..., b_hh=..., packed_ih=..., packed_hh=...,
+    col_offsets_ih=..., col_offsets_hh=..., scale_ih=..., scale_hh=...,
+    zero_point_ih=..., zero_point_hh=...) at aten/src/ATen/Functions.cpp:7826
+#20 0x00007fffea922fce in torch::autograd::<lambda(const at::Tensor&, at::TensorList, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar)>::operator()(const at::Tensor &, at::TensorList, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Tensor &, c10::Scalar, c10::Scalar, c10::Scalar, c10::Scalar) const (
+    __closure=0x7fffffffddbf, input=..., hx=..., w_ih=..., w_hh=..., b_ih=...,
+    b_hh=..., packed_ih=..., packed_hh=..., col_offsets_ih=...,
+    col_offsets_hh=..., scale_ih=..., scale_hh=..., zero_point_ih=...,
+    zero_point_hh=...)
+    at ../torch/csrc/autograd/generated/python_torch_functions.cpp:19140
+#21 0x00007fffea9234be in torch::autograd::THPVariable_quantized_lstm_cell (
+    self_=0x0, args=0x7fffd207bd60, kwargs=0x0)
+    at ../torch/csrc/autograd/generated/python_torch_functions.cpp:19142
+#22 0x00005555556d3a76 in cfunction_call_varargs (kwargs=<optimized out>,
+    args=<optimized out>, func=0x7fffd900f450)
+    at /tmp/build/80754af9/python_1589913560097/work/Objects/call.c:742
+#23 PyCFunction_Call ()
+    at /tmp/build/80754af9/python_1589913560097/work/Objects/call.c:772
+#24 0x000055555569150f in _PyObject_MakeTpCall ()
+    at /tmp/build/80754af9/python_1589913560097/work/Objects/call.c:159
+#25 0x0000555555719d09 in _PyObject_Vectorcall (kwnames=0x0,
+    nargsf=<optimized out>, args=0x7ffff7ebd5b8, callable=0x7fffd900f450)
+    at /tmp/build/80754af9/python_1589913560097/work/Include/cpython/abstract.h:125
+#26 call_function (kwnames=0x0, oparg=<optimized out>,
+    pp_stack=<synthetic pointer>, tstate=0x5555558e91a0)
+    at /tmp/build/80754af9/python_1589913560097/work/Python/ceval.c:4963
+#27 _PyEval_EvalFrameDefault ()
+    at /tmp/build/80754af9/python_1589913560097/work/Python/ceval.c:3469
+#28 0x00005555556de6a2 in _PyEval_EvalCodeWithName ()
+    at /tmp/build/80754af9/python_1589913560097/work/Python/ceval.c:4298
+#29 0x00005555556df454 in PyEval_EvalCodeEx ()
+    at /tmp/build/80754af9/python_1589913560097/work/Python/ceval.c:4327
+#30 0x000055555576dbbc in PyEval_EvalCode (co=<optimized out>,
+    globals=<optimized out>, locals=<optimized out>)
+    at /tmp/build/80754af9/python_1589913560097/work/Python/ceval.c:718
+#31 0x000055555576dc64 in run_eval_code_obj ()
+    at /tmp/build/80754af9/python_1589913560097/work/Python/pythonrun.c:1125
+#32 0x000055555579fd14 in run_mod ()
+    at /tmp/build/80754af9/python_1589913560097/work/Python/pythonrun.c:1147
+#33 0x0000555555668625 in PyRun_FileExFlags (fp=0x55555594f720,
+    filename_str=<optimized out>, start=<optimized out>,
+    globals=0x7ffff7f1ea00, locals=0x7ffff7f1ea00, closeit=0x1,
+    flags=0x7fffffffe458)
+    at /tmp/build/80754af9/python_1589913560097/work/Python/pythonrun.c:1063
+#34 0x0000555555668a0a in PyRun_SimpleFileExFlags (fp=0x55555594f720,
+    filename=<optimized out>, closeit=0x1, flags=0x7fffffffe458)
+    at /tmp/build/80754af9/python_1589913560097/work/Python/pythonrun.c:428
+#35 0x00005555556698cf in pymain_run_file (cf=0x7fffffffe458,
+    config=0x5555558e8630)
+    at /tmp/build/80754af9/python_1589913560097/work/Modules/main.c:387
+#36 pymain_run_python (exitcode=0x7fffffffe450)
+    at /tmp/build/80754af9/python_1589913560097/work/Modules/main.c:571
+#37 Py_RunMain ()
+    at /tmp/build/80754af9/python_1589913560097/work/Modules/main.c:650
+#38 0x00005555557a2829 in Py_BytesMain ()
+    at /tmp/build/80754af9/python_1589913560097/work/Modules/main.c:1089
+#39 0x00007ffff77e4bf7 in __libc_start_main (main=0x55555566a350 <main>,
+    argc=0x2, argv=0x7fffffffe648, init=<optimized out>, fini=<optimized out>,
+    rtld_fini=<optimized out>, stack_end=0x7fffffffe638)
+    at ../csu/libc-start.c:310
+#40 0x0000555555732b33 in _start () at ../sysdeps/x86_64/elf/start.S:103

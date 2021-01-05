@@ -1,0 +1,72 @@
+Thread 16 "python" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7fffcb027700 (LWP 23885)]
+[----------------------------------registers-----------------------------------]
+RAX: 0x555557a4c2e0
+RBX: 0xfffffffffffffef8
+RCX: 0x555557a4c2e0
+RDX: 0x8
+RSI: 0x8
+RDI: 0x555557a4c2e0
+RBP: 0x7fffcb026cb0 --> 0x7fffcb026db0 --> 0x7fffcb026e40 --> 0x7fffcb026eb0 --> 0x5555579da290 --> 0xffffffffffffffff
+RSP: 0x7fffcb026c00 --> 0x0
+RIP: 0x7fffdf9223de (<at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+91>:   )
+R8 : 0xca
+R9 : 0x0
+R10: 0x7fffcb026ce0 --> 0x0
+R11: 0x246
+R12: 0x5555579da200 --> 0xffffffffffffffff
+R13: 0x7fffdf93a95a (<_ZN2at12parallel_forIZNS_6native12_GLOBAL__N_127LayerNormKernelImplInternalIfEEvRKNS_6TensorES6_S6_llT_PS4_S8_S8_EUlllE_EEvlllRKS7_._omp_fn.1(void)>:   push   rbp)
+R14: 0x7fffffffc530 --> 0x0
+R15: 0x5555579db400 --> 0x1
+EFLAGS: 0x10202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x7fffdf9223cf <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+76>:
+    mov    rax,QWORD PTR [rbp-0x98]
+   0x7fffdf9223d6 <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+83>:
+    mov    QWORD PTR [rbp-0x80],rax
+   0x7fffdf9223da <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+87>:
+    mov    rax,QWORD PTR [rbp-0x80]
+=> 0x7fffdf9223de <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+91>:
+    vmovups ymm0,YMMWORD PTR [rax]
+   0x7fffdf9223e2 <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+95>:      lea    rax,[rbp-0x70]
+   0x7fffdf9223e6 <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+99>:      mov    rdi,rax
+   0x7fffdf9223e9 <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+102>:
+    call   0x7fffdf9221e2 <at::vec256::(anonymous namespace)::Vec256<float>::Vec256(__m256)>:          call   0x7fffdf9221e2 <at::vec256::(anonymous namespace)::Vec256<float>::Vec256(__m256)>
+   0x7fffdf9223ee <at::vec256::(anonymous namespace)::Vec256<float>::loadu(void const*, int64_t)+107>:
+    vmovaps ymm0,YMMWORD PTR [rbp-0x70]
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffcb026c00 --> 0x0
+0008| 0x7fffcb026c08 --> 0x0
+0016| 0x7fffcb026c10 --> 0x8
+0024| 0x7fffcb026c18 --> 0x555557a4c2e0
+0032| 0x7fffcb026c20 --> 0x0
+0040| 0x7fffcb026c28 --> 0x0
+0048| 0x7fffcb026c30 --> 0x555557a4c2e0
+0056| 0x7fffcb026c38 --> 0x0
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x00007fffdf9223de in _mm256_loadu_ps (__P=0x555557a4c2e0)
+    at /usr/lib/gcc/x86_64-linux-gnu/7/include/avxintrin.h:898
+898       return *(__m256_u *)__P;
+gdb-peda$ bt
+#0  0x00007fffdf9223de in _mm256_loadu_ps (__P=0x555557a4c2e0)
+    at /usr/lib/gcc/x86_64-linux-gnu/7/include/avxintrin.h:898
+#1  at::vec256::(anonymous namespace)::Vec256<float>::loadu (
+    ptr=0x555557a4c2e0, count=0x8)
+    at ../aten/src/ATen/cpu/vec256/vec256_float.h:77
+#2  0x00007fffdf933f68 in at::vec256::reduce_all<float, at::native::(anonymous namespace)::LayerNormKernelImplInternal(const at::Tensor&, const at::Tensor&, const at::Tensor&, int64_t, int64_t, T, at::Tensor*, at::Tensor*, at::Tensor*)::<lambda(int64_t, int64_t)> [with T = float]::<lambda(at::vec256::(anonymous namespace)::Vec256<float>&, at::vec256::(anonymous namespace)::Vec256<float>&)> >(const at::native::(anonymous namespace)::<lambda(int64_t, int64_t)>::<lambda(at::vec256::(anonymous namespace)::Vec256<float>&, at::vec256::(anonymous namespace)::Vec256<float>&)> &, const float *, int64_t)
+    (vec_fun=..., data=0x555557a4c2e0, size=0x308)
+    at ../aten/src/ATen/cpu/vec256/functional.h:35
+#3  0x00007fffdf92ec28 in at::native::(anonymous namespace)::<lambda(int64_t, int64_t)>::operator()(int64_t, int64_t) const (
+    __closure=0x7fffffffc680, start=0xa5, end=0xb0)
+    at aten/src/ATen/native/cpu/layer_norm_kernel.cpp.AVX2.cpp:45
+#4  0x00007fffdf93aa3b in at::parallel_for<void at::native::(anonymous namespace)::LayerNormKernelImplInternal<float>(at::Tensor const&, at::Tensor const&, at::Tensor const&, long, long, float, at::Tensor*, at::Tensor*, at::Tensor*)::{lambda(long, long)#1}> ()
+    at ../aten/src/ATen/ParallelOpenMP.h:48
+#5  0x00007fffebe586d5 in gomp_thread_start (
+    xdata=<optimized out>)
+    at /home/nwani/m3/conda-bld/compilers_linux-64_1560109574129/work/.build/x86_64-conda_cos6-linux-gnu/src/gcc/libgomp/team.c:123
+#6  0x00007ffff7bbb6db in start_thread (arg=0x7fffcb027700)
+    at pthread_create.c:463
+#7  0x00007ffff78e471f in clone ()
+    at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
